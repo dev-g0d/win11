@@ -1,4 +1,19 @@
-reg add "HKEY_CURRENT_USER\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32" /ve /t REG_SZ /d "" /f
-taskkill /f /im explorer.exe
-start explorer.exe
-[System.Windows.Forms.MessageBox]::Show('Context Win11 Disable', 'g0d', [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
+$keyPath = 'HKCU:\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32'
+
+if (Test-Path $keyPath) {
+    $value = Get-ItemProperty -Path $keyPath -Name '(Default)' -ErrorAction SilentlyContinue
+    if ($null -ne $value.'(Default)') {
+        [System.Windows.Forms.MessageBox]::Show('Already Done', 'g0d', [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
+    } else {
+        New-ItemProperty -Path $keyPath -Name '(Default)' -Value "" -PropertyType String -Force
+        Stop-Process -Name explorer -Force
+        Start-Process explorer.exe
+        [System.Windows.Forms.MessageBox]::Show('Context Win11 Disabled', 'g0d', [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
+    }
+} else {
+    New-Item -Path $keyPath -Force
+    New-ItemProperty -Path $keyPath -Name '(Default)' -Value "" -PropertyType String -Force
+    Stop-Process -Name explorer -Force
+    Start-Process explorer.exe
+    [System.Windows.Forms.MessageBox]::Show('Context Win11 Disabled', 'g0d', [System.Windows.Forms.MessageBoxButtons]::OK, [System.Windows.Forms.MessageBoxIcon]::Information)
+}
