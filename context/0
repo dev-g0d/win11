@@ -1,5 +1,3 @@
-curl -s https://raw.githubusercontent.com/dev-g0d/dev-g0d.github.io/refs/heads/main/ascii-text-art.txt
-
 $keyPath = 'HKCU:\Software\Classes\CLSID\{86ca1aa0-34aa-4e8b-a509-50c905bae2a2}\InprocServer32'
 
 if (Test-Path $keyPath) {
